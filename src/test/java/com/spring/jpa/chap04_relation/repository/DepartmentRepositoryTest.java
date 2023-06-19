@@ -69,6 +69,7 @@ class DepartmentRepositoryTest {
 
         Department newDept = departmentRepository.findById(1L).orElseThrow();
 
+        //사원의 부서정보를 업데이트 하면서, 부서에 대한 정보도 같이 업데이트.
         foundEmp.setDepartment(newDept);
 
         employRepository.save(foundEmp);
