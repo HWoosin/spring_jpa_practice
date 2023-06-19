@@ -1,15 +1,19 @@
 package com.spring.jpa.chap05_practice.api;
 
+import com.spring.jpa.chap05_practice.dto.PageDTO;
+import com.spring.jpa.chap05_practice.dto.PostListResponseDTO;
 import com.spring.jpa.chap05_practice.service.PostService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("/api/vi/posts")
+@RequestMapping("/api/v1/posts")
 public class PostApiController {
 
     //리소스: 게시물 (Post)
@@ -22,4 +26,12 @@ public class PostApiController {
      */
 
     private final PostService postService;
+
+    @GetMapping
+    public ResponseEntity<?> list(PageDTO pageDTO) {
+        log.info("/api/v1/post?page={}=&size={}",pageDTO.getPage(),pageDTO.getSize());
+
+        PostListResponseDTO dto = postService.getPosts(pageDTO);
+        return null;
+    }
 }
