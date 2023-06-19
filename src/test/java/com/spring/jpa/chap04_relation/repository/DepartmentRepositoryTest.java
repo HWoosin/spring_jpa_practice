@@ -10,6 +10,7 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import java.util.List;
 
 @SpringBootTest
 @Transactional
@@ -84,5 +85,43 @@ class DepartmentRepositoryTest {
         System.out.println("\n\n\n");
         foundDept.getEmployees().forEach(System.out::println);
         System.out.println("\n\n\n");
+    }
+
+    @Test
+    @DisplayName("N + 1 문제발생예시")
+    void testNPlus1Ex() {
+        //given
+        List<Department> departments = departmentRepository.findAll();
+
+        //when
+        departments.forEach(dept ->{
+            System.out.println("\n\n======= 사원리스트 =======");
+
+            List<Employee> employees = dept.getEmployees();
+            System.out.println("employees = " + employees);
+
+            System.out.println("\n\n");
+        });
+
+        //then
+    }
+
+    @Test
+    @DisplayName("N + 1 문제해결예시")
+    void testNPlus1Solution() {
+        //given
+        List<Department> departments = departmentRepository.findAllIncludeEmployees();
+
+        //when
+        departments.forEach(dept ->{
+            System.out.println("\n\n======= 사원리스트 =======");
+
+            List<Employee> employees = dept.getEmployees();
+            System.out.println("employees = " + employees);
+
+            System.out.println("\n\n");
+        });
+
+        //then
     }
 }
