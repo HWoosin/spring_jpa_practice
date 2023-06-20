@@ -2,6 +2,10 @@ package com.spring.jpa.chap05_practice.api;
 
 import com.spring.jpa.chap05_practice.dto.*;
 import com.spring.jpa.chap05_practice.service.PostService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
+@Tag(name = "post API", description = "게시물 등록 및 수정 삭제 api")
 @RestController
 @Slf4j
 @RequiredArgsConstructor
@@ -53,6 +58,15 @@ public class PostApiController {
 
     }
 
+    @Operation(summary = "게시물 작성",description = "게시물 작성을 담당하는 메서드")
+    @Parameters(
+            {
+                    @Parameter(name="writer", description = "게시물의 작성자 이름을 쓰세요!", example = "김뽀삐", required=true),
+                    @Parameter(name="title", description = "게시물의 제목을 쓰세요!", example = "메롱롱", required=true),
+                    @Parameter(name="content", description = "게시물의 내용을 쓰세요!", example = "내롱롱" ),
+                    @Parameter(name="hashTags", description = "게시물의 해시태그를 작성하세요!", example = "핳!" )
+            }
+    )
     @PostMapping
     public ResponseEntity create(@Validated @RequestBody PostCreateDTO dto, BindingResult result) {//검증 에러 정보를 가진 객체
         log.info("api/v1/posts:POST - payload: {}",dto);
