@@ -22,9 +22,9 @@ class PostRepositoryTest {
         for(int i=1; i<=378; i++){
             postRepository.save(
                     Post.builder()
-                            .title("하힣핳힣"+1)
-                            .content("야이바보야"+1)
-                            .writer("멍충이"+1)
+                            .title("하힣핳힣"+i)
+                            .content("야이바보야"+i)
+                            .writer("멍충이"+i)
                             .build()
             );
         }
