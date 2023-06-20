@@ -1,6 +1,7 @@
 package com.spring.jpa.chap05_practice.service;
 
 import com.spring.jpa.chap05_practice.dto.*;
+import com.spring.jpa.chap05_practice.entity.HashTag;
 import com.spring.jpa.chap05_practice.entity.Post;
 import com.spring.jpa.chap05_practice.repository.HashTagRepository;
 import com.spring.jpa.chap05_practice.repository.PostRepository;
@@ -63,7 +64,32 @@ public class PostService {
         return new PostDetailResponseDTO(postEntity);
     }
 
-    public PostDetailResponseDTO insert(PostCreateDTO dto) {
-        return null;
+    public PostDetailResponseDTO insert(final PostCreateDTO dto) //그대로 변경없이 넣기
+            throws RuntimeException {
+            //게시물 저장
+            Post saved = postRepository.save(dto.toEntity());
+
+            //해시태그 저장
+            List<String> hashTags = dto.getHashTags();
+            if (hashTags != null && hashTags.size() > 0) {
+                hashTags.forEach(ht -> {
+                    HashTag savedTag = hashTagRepository.save(
+                            HashTag.builder()
+                                    .tagName(ht)
+                                    .post(saved)
+                                    .build()
+                    );
+                    //Post Entity는 DB에 save를 진행할 때 HashTag에 대한 내용을 갱신하지 않는다.
+                    //HashTag Entity는 따로 save를 진행한다.
+                    //HashTag는 연관관계의 주인이기 때문에 save를 진행할 때 Post를 전달하기 때문에
+                    //DB와 Entity와의 상태가 동일하지만, Post는 HashTag의 정보가 비어있는 상태이다.
+                    //Post Entity에 연관관계 편의 메서드를 작성하여 HashTag의 내용을 동기화 해야
+                    //추후에 진행되는 과정에서 문제가 발생하지 않는다.(연관관계의 주인이 아니기 때문)
+                    saved.addHashTag(savedTag);
+                });
+            }
+
+            return new PostDetailResponseDTO(saved);
+
     }
 }

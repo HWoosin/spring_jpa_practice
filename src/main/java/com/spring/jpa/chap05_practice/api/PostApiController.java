@@ -69,6 +69,11 @@ public class PostApiController {
             });
             return ResponseEntity.badRequest().body(fieldErrors);
         }
-        PostDetailResponseDTO responseDTO = postService.insert(dto);
+        try {
+            PostDetailResponseDTO responseDTO = postService.insert(dto);
+            return ResponseEntity.ok().body(responseDTO);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("에러!"+e.getMessage());
+        }
     }
 }
